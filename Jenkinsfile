@@ -16,28 +16,27 @@ pipeline {
         stage('Generate HTML') {
             steps {
                 script {
-                    // Create output directory if it doesn't exist
-                    bat 'if not exist output mkdir output'
+                    // Create output directory if it doesn't exist (handled by the script now)
                     
-                    // Try different Python commands depending on what's available
-                    def pythonCmd = ''
-                    def exitCode = bat(script: 'python --version', returnStatus: true)
+                    // Try different Node.js commands depending on what's available
+                    def nodeCmd = ''
+                    def exitCode = bat(script: 'node --version', returnStatus: true)
                     
                     if (exitCode == 0) {
-                        pythonCmd = 'python'
+                        nodeCmd = 'node'
                     } else {
-                        exitCode = bat(script: 'python3 --version', returnStatus: true)
+                        exitCode = bat(script: 'nodejs --version', returnStatus: true)
                         if (exitCode == 0) {
-                            pythonCmd = 'python3'
+                            nodeCmd = 'nodejs'
                         } else {
-                            // If neither python nor python3 is in PATH, try with the full path to python
-                            // This assumes Python is installed in the default location
-                            pythonCmd = 'C:\\Python310\\python.exe'
+                            // If neither node nor nodejs is in PATH, try with the full path to node
+                            // This assumes Node.js is installed in the default location
+                            nodeCmd = 'C:\\Program Files\\nodejs\\node.exe'
                         }
                     }
                     
-                    // Execute the Python script with parameters
-                    bat "${pythonCmd} generate_html.py \"${params.TITLE}\" \"${params.COLOR}\""
+                    // Execute the JavaScript script with parameters
+                    bat "${nodeCmd} generate_html.js \"${params.TITLE}\" \"${params.COLOR}\""
                     
                     // Archive the artifacts
                     archiveArtifacts artifacts: 'output/index.html', fingerprint: true
