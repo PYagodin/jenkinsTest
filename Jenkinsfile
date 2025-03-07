@@ -29,7 +29,7 @@ pipeline {
     post {
         success {
             echo "HTML files successfully generated!"
-            echo "Access the HTML output at: ${BUILD_URL}artifact/output/redirect.html"
+            echo "Access the HTML output at: ${BUILD_URL}artifact/output/result.html"
         }
     }
 } 
