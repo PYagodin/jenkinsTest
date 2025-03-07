@@ -1,44 +1,38 @@
 pipeline {
     agent any
+    
     parameters {
-        string(name: 'BRANCH_NAME', defaultValue: 'main', description: 'Branch to build')
+        string(name: 'TITLE', defaultValue: 'Jenkins Pipeline HTML Output', description: 'Title for the HTML page')
+        choice(name: 'COLOR', choices: ['#3498db', '#e74c3c', '#2ecc71', '#f39c12', '#9b59b6'], description: 'Background color of the HTML page')
     }
-    environment {
-        REPO_URL = 'https://github.com/PYagodin/jenkinsTest.git'
-        SCRIPT_NAME = 'script.py'
-        HTML_OUTPUT = 'output.html'
-    }
+    
     stages {
-        stage('Clone Repository') {
+        stage('Checkout') {
             steps {
-                git branch: params.BRANCH_NAME, url: env.REPO_URL
+                checkout scm
             }
         }
-        stage('Run Script') {
+        
+        stage('Generate HTML') {
             steps {
-                sh 'python3 ${SCRIPT_NAME} > ${HTML_OUTPUT}'
-            }
-        }
-        stage('Publish HTML Report') {
-            steps {
-                publishHTML([
-                    allowMissing: false,
-                    alwaysLinkToLastBuild: true,
-                    keepAll: true,
-                    reportDir: '',
-                    reportFiles: env.HTML_OUTPUT,
-                    reportName: 'Script Output',
-                    reportTitles: 'Output'
-                ])
+                script {
+                    // Create output directory if it doesn't exist
+                    sh 'mkdir -p output'
+                    
+                    // Execute the Python script with parameters
+                    sh "python generate_html.py '${params.TITLE}' '${params.COLOR}'"
+                    
+                    // Archive the artifacts
+                    archiveArtifacts artifacts: 'output/index.html', fingerprint: true
+                }
             }
         }
     }
+    
     post {
         success {
-            echo "Build successful! View output at ${env.BUILD_URL}/Script%20Output/"
-        }
-        failure {
-            echo "Build failed. Check logs for details."
+            echo "HTML file successfully generated!"
+            echo "Access the HTML output at: ${BUILD_URL}artifact/output/index.html"
         }
     }
-}
+} 
