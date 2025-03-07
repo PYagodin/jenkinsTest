@@ -19,8 +19,8 @@ pipeline {
                     // Execute the batch script with parameters
                     bat "generate_html.bat \"${params.TITLE}\" \"${params.COLOR}\""
                     
-                    // Archive the artifacts
-                    archiveArtifacts artifacts: 'output/**/*', fingerprint: true
+                    // Archive only the HTML file
+                    archiveArtifacts artifacts: 'output/index.html', fingerprint: true
                 }
             }
         }
@@ -28,8 +28,8 @@ pipeline {
     
     post {
         success {
-            echo "HTML files successfully generated!"
-            echo "Access the HTML output at: ${BUILD_URL}artifact/output/result.html"
+            echo "HTML file successfully generated!"
+            echo "Access the HTML output at: ${BUILD_URL}artifact/output/index.html"
         }
     }
 } 
