@@ -1,0 +1,327 @@
+# Пошаговая инструкция по выполнению задания Jenkins с проверкой палиндрома
+
+## Содержание
+1. Введение
+2. Что такое Jenkins и GitHub
+3. Настройка необходимых инструментов
+4. Создание репозитория на GitHub
+5. Настройка Jenkins
+6. Создание необходимых файлов
+7. Запуск Jenkins-задания
+8. Публикация результатов
+9. Полные листинги кода с пояснениями
+
+---
+
+## 1. Введение
+
+Это руководство поможет вам выполнить задание по созданию Jenkins-задания, которое проверяет, является ли введенная строка палиндромом (словом, которое читается одинаково в обоих направлениях), и отображает результат в формате HTML.
+
+## 2. Что такое Jenkins и GitHub
+
+### Jenkins
+Jenkins - это сервер непрерывной интеграции с открытым исходным кодом, который автоматизирует процессы разработки, тестирования и развертывания программного обеспечения. Он позволяет настраивать и запускать автоматизированные задания.
+
+### GitHub
+GitHub - это платформа для хранения и совместной работы над кодом. Она позволяет хранить вашу кодовую базу, отслеживать изменения и совместно работать над проектами с другими разработчиками.
+
+## 3. Настройка необходимых инструментов
+
+### Установка Git
+1. Скачайте Git с официального сайта: https://git-scm.com/download/win
+2. Установите, следуя инструкциям установщика
+3. Откройте командную строку (cmd) или PowerShell и проверьте установку командой:
+   ```
+   git --version
+   ```
+
+### Установка Jenkins (если еще не установлен)
+1. Скачайте Jenkins с официального сайта: https://www.jenkins.io/download/
+2. Установите, следуя инструкциям установщика
+3. Откройте браузер и перейдите по адресу http://localhost:8080/
+4. Следуйте инструкциям для завершения установки
+
+## 4. Создание репозитория на GitHub
+
+1. Зарегистрируйтесь на GitHub (https://github.com/), если у вас еще нет аккаунта
+2. Нажмите кнопку "+" в верхнем правом углу и выберите "New repository"
+3. Назовите репозиторий (например, "jenkinsTest")
+4. Оставьте репозиторий публичным и установите флажок "Initialize this repository with a README"
+5. Нажмите "Create repository"
+
+## 5. Клонирование репозитория на локальный компьютер
+
+1. На странице вашего репозитория нажмите зеленую кнопку "Code" и скопируйте URL
+2. Откройте командную строку и перейдите в директорию, где хотите разместить проект
+3. Выполните команду:
+   ```
+   git clone https://github.com/ВАШЕ_ИМЯ_ПОЛЬЗОВАТЕЛЯ/jenkinsTest.git
+   ```
+4. Перейдите в созданную директорию:
+   ```
+   cd jenkinsTest
+   ```
+
+## 6. Создание необходимых файлов
+
+### Создание файла batch-скрипта (generate_html.bat)
+1. В директории проекта создайте файл с названием `generate_html.bat`
+2. Скопируйте содержимое скрипта из раздела "Полные листинги кода" ниже
+
+### Создание файла Jenkinsfile
+1. В директории проекта создайте файл с названием `Jenkinsfile` (без расширения)
+2. Скопируйте содержимое Jenkinsfile из раздела "Полные листинги кода" ниже
+
+### Сохранение изменений в Git и отправка на GitHub
+1. Добавьте файлы в Git:
+   ```
+   git add generate_html.bat Jenkinsfile
+   ```
+2. Зафиксируйте изменения:
+   ```
+   git commit -m "Добавлены файлы для задания Jenkins"
+   ```
+3. Отправьте изменения на GitHub:
+   ```
+   git push origin main
+   ```
+
+## 7. Настройка Jenkins
+
+### Создание Jenkins-задания
+1. Откройте Jenkins в браузере (обычно http://localhost:8080/)
+2. Нажмите "New Item" (Создать элемент)
+3. Введите имя задания (например, "HTML-Generator-Pipeline")
+4. Выберите тип "Pipeline" и нажмите "OK"
+
+### Настройка задания
+1. В разделе "Pipeline" выберите "Pipeline script from SCM"
+2. В поле "SCM" выберите "Git"
+3. В поле "Repository URL" введите URL вашего репозитория GitHub (например, https://github.com/ВАШЕ_ИМЯ_ПОЛЬЗОВАТЕЛЯ/jenkinsTest.git)
+4. В поле "Branch Specifier" введите "*/main"
+5. В поле "Script Path" введите "Jenkinsfile"
+6. Нажмите "Save" (Сохранить)
+
+## 8. Запуск Jenkins-задания
+
+1. Вернитесь на страницу задания
+2. Нажмите "Build with Parameters" (Собрать с параметрами)
+3. Введите заголовок в поле "TITLE" (например, "Проверка палиндрома")
+4. Введите строку для проверки в поле "STRING_TO_CHECK" (например, "казак")
+5. Нажмите "Build" (Собрать)
+
+## 9. Просмотр результатов
+
+1. После завершения сборки, нажмите на номер сборки в "Build History"
+2. Нажмите на "Console Output" (Вывод консоли)
+3. В конце вывода вы увидите ссылку на результат в формате HTML
+4. Нажмите на ссылку, чтобы открыть страницу с результатом проверки палиндрома
+
+## 10. Публикация результатов на GitHub Pages (опционально)
+
+Если вы хотите сделать результаты доступными через публичную ссылку:
+
+1. На странице вашего репозитория на GitHub перейдите в "Settings"
+2. Прокрутите вниз до раздела "GitHub Pages"
+3. В разделе "Source" выберите "main branch" и "/docs" папку
+4. Нажмите "Save"
+5. После сохранения вы получите URL страницы (обычно в формате https://ВАШЕ_ИМЯ_ПОЛЬЗОВАТЕЛЯ.github.io/jenkinsTest/)
+
+---
+
+## Полные листинги кода с пояснениями
+
+### Jenkinsfile (полная версия с пояснениями)
+
+```groovy
+pipeline {
+    agent any  // Запускать пайплайн на любом доступном агенте Jenkins
+    
+    parameters {  // Определение параметров для задания
+        string(name: 'TITLE', defaultValue: 'Palindrome Checker', description: 'Title for the HTML page')  // Параметр для заголовка HTML-страницы
+        string(name: 'STRING_TO_CHECK', defaultValue: 'racecar', description: 'Enter a string to check if it is a palindrome')  // Параметр для строки, которую нужно проверить на палиндром
+    }
+    
+    stages {  // Определение этапов пайплайна
+        stage('Checkout') {  // Этап получения кода из репозитория
+            steps {
+                checkout scm  // Выполнить получение кода из системы контроля версий (Git)
+            }
+        }
+        
+        stage('Generate HTML') {  // Этап генерации HTML-файла
+            steps {
+                script {  // Начало скриптового блока
+                    // Выполнить batch-скрипт с параметрами
+                    bat "generate_html.bat \"${params.TITLE}\" \"${params.STRING_TO_CHECK}\""
+                    
+                    // Архивировать сгенерированный HTML-файл как артефакт сборки
+                    archiveArtifacts artifacts: 'output/index.html', fingerprint: true
+                }
+            }
+        }
+        
+        stage('Publish to GitHub Pages') {  // Этап публикации результатов на GitHub Pages
+            steps {
+                script {
+                    // Создать директорию docs для GitHub Pages, если она не существует
+                    bat 'if not exist docs mkdir docs'
+                    
+                    // Скопировать HTML-файл в директорию docs
+                    bat 'copy output\\index.html docs\\index.html'
+                    
+                    // Настроить Git для отправки изменений
+                    bat 'git config user.email "jenkins@example.com"'
+                    bat 'git config user.name "Jenkins Pipeline"'
+                    
+                    // Добавить, зафиксировать и отправить директорию docs
+                    bat 'git add docs/'
+                    bat 'git commit -m "Update GitHub Pages with latest palindrome check result"'
+                    bat 'git push origin main'
+                }
+            }
+        }
+    }
+    
+    post {  // Действия, выполняемые после завершения всех этапов
+        success {  // Выполняется при успешном завершении
+            echo "HTML file successfully generated!"  // Вывести сообщение об успешной генерации файла
+            echo "Access the HTML output at: ${BUILD_URL}artifact/output/index.html"  // Вывести ссылку на HTML-файл
+            echo "Public GitHub Pages URL: https://ВАШЕ_ИМЯ_ПОЛЬЗОВАТЕЛЯ.github.io/jenkinsTest/"  // Вывести ссылку на публичную страницу GitHub Pages
+        }
+    }
+}
+```
+
+### generate_html.bat (полная версия с пояснениями)
+
+```batch
+@echo off
+REM HTML Generator for Jenkins Pipeline
+REM This batch script generates a single HTML file that checks if a string is a palindrome
+
+REM Получение параметров (удаление кавычек, если они есть)
+set TITLE=%~1
+set STRING_TO_CHECK=%~2
+
+REM Создание выходной директории, если она не существует
+if not exist output mkdir output
+
+REM Проверка, является ли строка палиндромом
+setlocal enabledelayedexpansion
+set "reverse="
+set "original=%STRING_TO_CHECK%"
+set "length=0"
+
+REM Получение длины строки и построение обратной строки
+:loop
+if "!original:~%length%,1!" neq "" (
+    set "reverse=!original:~%length%,1!!reverse!"
+    set /a "length+=1"
+    goto loop
+)
+
+REM Установка цвета фона по умолчанию
+set BACKGROUND_COLOR=#3498db
+
+REM Проверка, является ли строка палиндромом, и установка соответствующих цветов и сообщения
+if /i "%STRING_TO_CHECK%" equ "%reverse%" (
+    set IS_PALINDROME=Да
+    set RESULT_COLOR=#2ecc71
+    set RESULT_MESSAGE=Строка "%STRING_TO_CHECK%" является палиндромом!
+) else (
+    set IS_PALINDROME=Нет
+    set RESULT_COLOR=#e74c3c
+    set RESULT_MESSAGE=Строка "%STRING_TO_CHECK%" не является палиндромом.
+)
+
+REM Создание правильно отформатированного HTML-файла с встроенными параметрами
+echo ^<!DOCTYPE html^> > output\index.html
+echo ^<html lang="ru"^> >> output\index.html
+echo ^<head^> >> output\index.html
+echo ^<meta charset="UTF-8"^> >> output\index.html
+echo ^<meta name="viewport" content="width=device-width, initial-scale=1.0"^> >> output\index.html
+echo ^<title^>%TITLE%^</title^> >> output\index.html
+echo ^<style^> >> output\index.html
+echo body { >> output\index.html
+echo   font-family: Arial, sans-serif; >> output\index.html
+echo   background-color: %BACKGROUND_COLOR%; >> output\index.html
+echo   color: white; >> output\index.html
+echo   margin: 0; >> output\index.html
+echo   padding: 20px; >> output\index.html
+echo   display: flex; >> output\index.html
+echo   flex-direction: column; >> output\index.html
+echo   align-items: center; >> output\index.html
+echo   justify-content: center; >> output\index.html
+echo   min-height: 100vh; >> output\index.html
+echo } >> output\index.html
+echo .container { >> output\index.html
+echo   background-color: rgba(0, 0, 0, 0.5); >> output\index.html
+echo   border-radius: 10px; >> output\index.html
+echo   padding: 30px; >> output\index.html
+echo   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); >> output\index.html
+echo   max-width: 800px; >> output\index.html
+echo   width: 100%%; >> output\index.html
+echo } >> output\index.html
+echo h1 { >> output\index.html
+echo   margin-top: 0; >> output\index.html
+echo   border-bottom: 2px solid white; >> output\index.html
+echo   padding-bottom: 10px; >> output\index.html
+echo } >> output\index.html
+echo .info { >> output\index.html
+echo   margin-top: 20px; >> output\index.html
+echo   font-size: 18px; >> output\index.html
+echo } >> output\index.html
+echo .result { >> output\index.html
+echo   font-size: 24px; >> output\index.html
+echo   font-weight: bold; >> output\index.html
+echo   margin: 20px 0; >> output\index.html
+echo   padding: 15px; >> output\index.html
+echo   border-radius: 5px; >> output\index.html
+echo   background-color: %RESULT_COLOR%; >> output\index.html
+echo   text-align: center; >> output\index.html
+echo } >> output\index.html
+echo .details { >> output\index.html
+echo   margin-top: 20px; >> output\index.html
+echo   background-color: rgba(255, 255, 255, 0.1); >> output\index.html
+echo   padding: 15px; >> output\index.html
+echo   border-radius: 5px; >> output\index.html
+echo } >> output\index.html
+echo .code { >> output\index.html
+echo   font-family: monospace; >> output\index.html
+echo   background-color: rgba(0, 0, 0, 0.3); >> output\index.html
+echo   padding: 5px 10px; >> output\index.html
+echo   border-radius: 3px; >> output\index.html
+echo } >> output\index.html
+echo ^</style^> >> output\index.html
+echo ^</head^> >> output\index.html
+echo ^<body^> >> output\index.html
+echo ^<div class="container"^> >> output\index.html
+echo ^<h1^>%TITLE%^</h1^> >> output\index.html
+echo ^<div class="result"^>%RESULT_MESSAGE%^</div^> >> output\index.html
+echo ^<div class="info"^> >> output\index.html
+echo ^<p^>Исходная строка: ^<span class="code"^>%STRING_TO_CHECK%^</span^>^</p^> >> output\index.html
+echo ^<p^>Обратная строка: ^<span class="code"^>%reverse%^</span^>^</p^> >> output\index.html
+echo ^<p^>Является палиндромом: ^<strong^>%IS_PALINDROME%^</strong^>^</p^> >> output\index.html
+echo ^<div class="details"^> >> output\index.html
+echo ^<p^>Палиндром - это слово, число, фраза или другая последовательность символов, которая читается одинаково как в прямом, так и в обратном направлении.^</p^> >> output\index.html
+echo ^</div^> >> output\index.html
+echo ^<p^>Время генерации: %date% %time%^</p^> >> output\index.html
+echo ^</div^> >> output\index.html
+echo ^</div^> >> output\index.html
+echo ^</body^> >> output\index.html
+echo ^</html^> >> output\index.html
+
+echo HTML-файл создан в директории: output\index.html
+```
+
+## Заключение
+
+Поздравляем! Вы успешно выполнили задание по созданию Jenkins-задания, которое проверяет, является ли строка палиндромом, и отображает результат в формате HTML. Теперь вы можете использовать эти знания для создания других автоматизированных заданий в Jenkins.
+
+Если у вас возникли проблемы при выполнении задания, проверьте следующее:
+1. Правильно ли установлен и настроен Jenkins
+2. Правильно ли настроен доступ к вашему GitHub-репозиторию
+3. Правильно ли созданы и сохранены файлы Jenkinsfile и generate_html.bat
+
+Удачи в дальнейшем изучении DevOps-практик! 
