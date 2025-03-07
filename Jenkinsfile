@@ -2,8 +2,8 @@ pipeline {
     agent any
     
     parameters {
-        string(name: 'TITLE', defaultValue: 'Jenkins Pipeline HTML Output', description: 'Title for the HTML page')
-        choice(name: 'COLOR', choices: ['#3498db', '#e74c3c', '#2ecc71', '#f39c12', '#9b59b6'], description: 'Background color of the HTML page')
+        string(name: 'TITLE', defaultValue: 'Palindrome Checker', description: 'Title for the HTML page')
+        string(name: 'STRING_TO_CHECK', defaultValue: 'racecar', description: 'Enter a string to check if it is a palindrome')
     }
     
     stages {
@@ -17,7 +17,7 @@ pipeline {
             steps {
                 script {
                     // Execute the batch script with parameters
-                    bat "generate_html.bat \"${params.TITLE}\" \"${params.COLOR}\""
+                    bat "generate_html.bat \"${params.TITLE}\" \"${params.STRING_TO_CHECK}\""
                     
                     // Archive only the HTML file
                     archiveArtifacts artifacts: 'output/index.html', fingerprint: true
