@@ -7,9 +7,11 @@ pipeline {
     }
     
     stages {
-        stage('Checkout') {
+        stage('Clone Repository') {
             steps {
-                checkout scm
+                // Explicitly clone the GitHub repository
+                git url: 'https://github.com/PYagodin/jenkinsTest.git', branch: 'main'
+                echo "Repository successfully cloned from https://github.com/PYagodin/jenkinsTest.git"
             }
         }
         
@@ -24,12 +26,34 @@ pipeline {
                 }
             }
         }
+        
+        stage('Publish to GitHub Pages') {
+            steps {
+                script {
+                    // Create docs directory for GitHub Pages if it doesn't exist
+                    bat 'if not exist docs mkdir docs'
+                    
+                    // Copy the HTML file to the docs directory
+                    bat 'copy output\\index.html docs\\index.html'
+                    
+                    // Configure Git for the push
+                    bat 'git config user.email "jenkins@example.com"'
+                    bat 'git config user.name "Jenkins Pipeline"'
+                    
+                    // Add, commit, and push the docs directory
+                    bat 'git add docs/'
+                    bat 'git commit -m "Update GitHub Pages with latest palindrome check result"'
+                    bat 'git push origin main'
+                }
+            }
+        }
     }
     
     post {
         success {
             echo "HTML file successfully generated!"
             echo "Access the HTML output at: ${BUILD_URL}artifact/output/index.html"
+            echo "Public GitHub Pages URL: https://PYagodin.github.io/jenkinsTest/"
         }
     }
 } 

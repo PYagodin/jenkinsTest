@@ -143,9 +143,11 @@ pipeline {
     }
     
     stages {  // Определение этапов пайплайна
-        stage('Checkout') {  // Этап получения кода из репозитория
+        stage('Clone Repository') {  // Этап клонирования репозитория из GitHub
             steps {
-                checkout scm  // Выполнить получение кода из системы контроля версий (Git)
+                // Явное клонирование репозитория GitHub
+                git url: 'https://github.com/PYagodin/jenkinsTest.git', branch: 'main'
+                echo "Repository successfully cloned from https://github.com/PYagodin/jenkinsTest.git"
             }
         }
         
@@ -187,7 +189,7 @@ pipeline {
         success {  // Выполняется при успешном завершении
             echo "HTML file successfully generated!"  // Вывести сообщение об успешной генерации файла
             echo "Access the HTML output at: ${BUILD_URL}artifact/output/index.html"  // Вывести ссылку на HTML-файл
-            echo "Public GitHub Pages URL: https://ВАШЕ_ИМЯ_ПОЛЬЗОВАТЕЛЯ.github.io/jenkinsTest/"  // Вывести ссылку на публичную страницу GitHub Pages
+            echo "Public GitHub Pages URL: https://PYagodin.github.io/jenkinsTest/"  // Вывести ссылку на публичную страницу GitHub Pages
         }
     }
 }
