@@ -2,20 +2,21 @@
 REM HTML Generator for Jenkins Pipeline
 REM This batch script generates a single HTML file that checks if a string is a palindrome
 
-REM Get parameters (remove quotes if present)
+REM Получение параметров (удаление кавычек, если они есть)
 set TITLE=%~1
 set STRING_TO_CHECK=%~2
+set REPO_INFO=%~3
 
-REM Create output directory if it doesn't exist
+REM Создание выходной директории, если она не существует
 if not exist output mkdir output
 
-REM Check if the string is a palindrome
+REM Проверка, является ли строка палиндромом
 setlocal enabledelayedexpansion
 set "reverse="
 set "original=%STRING_TO_CHECK%"
 set "length=0"
 
-REM Get the length and build the reversed string
+REM Получение длины строки и построение обратной строки
 :loop
 if "!original:~%length%,1!" neq "" (
     set "reverse=!original:~%length%,1!!reverse!"
@@ -23,23 +24,23 @@ if "!original:~%length%,1!" neq "" (
     goto loop
 )
 
-REM Default background color
+REM Установка цвета фона по умолчанию
 set BACKGROUND_COLOR=#3498db
 
-REM Check if it's a palindrome and set appropriate colors and message
+REM Проверка, является ли строка палиндромом, и установка соответствующих цветов и сообщения
 if /i "%STRING_TO_CHECK%" equ "%reverse%" (
-    set IS_PALINDROME=Yes
+    set IS_PALINDROME=Да
     set RESULT_COLOR=#2ecc71
-    set RESULT_MESSAGE=The string "%STRING_TO_CHECK%" is a palindrome!
+    set RESULT_MESSAGE=Строка "%STRING_TO_CHECK%" является палиндромом!
 ) else (
-    set IS_PALINDROME=No
+    set IS_PALINDROME=Нет
     set RESULT_COLOR=#e74c3c
-    set RESULT_MESSAGE=The string "%STRING_TO_CHECK%" is not a palindrome.
+    set RESULT_MESSAGE=Строка "%STRING_TO_CHECK%" не является палиндромом.
 )
 
-REM Create a properly formatted HTML file with embedded parameters
+REM Создание правильно отформатированного HTML-файла с встроенными параметрами
 echo ^<!DOCTYPE html^> > output\index.html
-echo ^<html lang="en"^> >> output\index.html
+echo ^<html lang="ru"^> >> output\index.html
 echo ^<head^> >> output\index.html
 echo ^<meta charset="UTF-8"^> >> output\index.html
 echo ^<meta name="viewport" content="width=device-width, initial-scale=1.0"^> >> output\index.html
@@ -95,6 +96,14 @@ echo   background-color: rgba(0, 0, 0, 0.3); >> output\index.html
 echo   padding: 5px 10px; >> output\index.html
 echo   border-radius: 3px; >> output\index.html
 echo } >> output\index.html
+echo .repo-info { >> output\index.html
+echo   margin-top: 20px; >> output\index.html
+echo   background-color: rgba(0, 0, 0, 0.3); >> output\index.html
+echo   padding: 10px; >> output\index.html
+echo   border-radius: 5px; >> output\index.html
+echo   font-size: 14px; >> output\index.html
+echo   border-left: 4px solid #f39c12; >> output\index.html
+echo } >> output\index.html
 echo ^</style^> >> output\index.html
 echo ^</head^> >> output\index.html
 echo ^<body^> >> output\index.html
@@ -102,16 +111,19 @@ echo ^<div class="container"^> >> output\index.html
 echo ^<h1^>%TITLE%^</h1^> >> output\index.html
 echo ^<div class="result"^>%RESULT_MESSAGE%^</div^> >> output\index.html
 echo ^<div class="info"^> >> output\index.html
-echo ^<p^>Original string: ^<span class="code"^>%STRING_TO_CHECK%^</span^>^</p^> >> output\index.html
-echo ^<p^>Reversed string: ^<span class="code"^>%reverse%^</span^>^</p^> >> output\index.html
-echo ^<p^>Is palindrome: ^<strong^>%IS_PALINDROME%^</strong^>^</p^> >> output\index.html
+echo ^<p^>Исходная строка: ^<span class="code"^>%STRING_TO_CHECK%^</span^>^</p^> >> output\index.html
+echo ^<p^>Обратная строка: ^<span class="code"^>%reverse%^</span^>^</p^> >> output\index.html
+echo ^<p^>Является палиндромом: ^<strong^>%IS_PALINDROME%^</strong^>^</p^> >> output\index.html
 echo ^<div class="details"^> >> output\index.html
-echo ^<p^>A palindrome is a word, number, phrase, or other sequence of characters that reads the same forward and backward.^</p^> >> output\index.html
+echo ^<p^>Палиндром - это слово, число, фраза или другая последовательность символов, которая читается одинаково как в прямом, так и в обратном направлении.^</p^> >> output\index.html
 echo ^</div^> >> output\index.html
-echo ^<p^>Generation time: %date% %time%^</p^> >> output\index.html
+echo ^<div class="repo-info"^> >> output\index.html
+echo ^<p^>^<strong^>Jenkins Pipeline:^</strong^> %REPO_INFO%^</p^> >> output\index.html
+echo ^</div^> >> output\index.html
+echo ^<p^>Время генерации: %date% %time%^</p^> >> output\index.html
 echo ^</div^> >> output\index.html
 echo ^</div^> >> output\index.html
 echo ^</body^> >> output\index.html
 echo ^</html^> >> output\index.html
 
-echo HTML file generated in the output directory: output\index.html 
+echo HTML-файл создан в директории: output\index.html 

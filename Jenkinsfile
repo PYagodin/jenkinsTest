@@ -12,14 +12,18 @@ pipeline {
                 // Explicitly clone the GitHub repository
                 git url: 'https://github.com/PYagodin/jenkinsTest.git', branch: 'main'
                 echo "Repository successfully cloned from https://github.com/PYagodin/jenkinsTest.git"
+                // Set an environment variable to track that the repo was cloned
+                script {
+                    env.REPO_INFO = "Repository cloned: https://github.com/PYagodin/jenkinsTest.git (branch: main)"
+                }
             }
         }
         
         stage('Generate HTML') {
             steps {
                 script {
-                    // Execute the batch script with parameters
-                    bat "generate_html.bat \"${params.TITLE}\" \"${params.STRING_TO_CHECK}\""
+                    // Execute the batch script with parameters, including repo info
+                    bat "generate_html.bat \"${params.TITLE}\" \"${params.STRING_TO_CHECK}\" \"${env.REPO_INFO}\""
                     
                     // Archive only the HTML file
                     archiveArtifacts artifacts: 'output/index.html', fingerprint: true

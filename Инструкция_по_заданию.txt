@@ -148,14 +148,18 @@ pipeline {
                 // Явное клонирование репозитория GitHub
                 git url: 'https://github.com/PYagodin/jenkinsTest.git', branch: 'main'
                 echo "Repository successfully cloned from https://github.com/PYagodin/jenkinsTest.git"
+                // Установка переменной окружения для отслеживания клонирования репозитория
+                script {
+                    env.REPO_INFO = "Repository cloned: https://github.com/PYagodin/jenkinsTest.git (branch: main)"
+                }
             }
         }
         
         stage('Generate HTML') {  // Этап генерации HTML-файла
             steps {
                 script {  // Начало скриптового блока
-                    // Выполнить batch-скрипт с параметрами
-                    bat "generate_html.bat \"${params.TITLE}\" \"${params.STRING_TO_CHECK}\""
+                    // Выполнить batch-скрипт с параметрами, включая информацию о репозитории
+                    bat "generate_html.bat \"${params.TITLE}\" \"${params.STRING_TO_CHECK}\" \"${env.REPO_INFO}\""
                     
                     // Архивировать сгенерированный HTML-файл как артефакт сборки
                     archiveArtifacts artifacts: 'output/index.html', fingerprint: true
@@ -205,6 +209,7 @@ REM This batch script generates a single HTML file that checks if a string is a 
 REM Получение параметров (удаление кавычек, если они есть)
 set TITLE=%~1
 set STRING_TO_CHECK=%~2
+set REPO_INFO=%~3  // Информация о клонированном репозитории
 
 REM Создание выходной директории, если она не существует
 if not exist output mkdir output
@@ -309,6 +314,9 @@ echo ^<div class="details"^> >> output\index.html
 echo ^<p^>Палиндром - это слово, число, фраза или другая последовательность символов, которая читается одинаково как в прямом, так и в обратном направлении.^</p^> >> output\index.html
 echo ^</div^> >> output\index.html
 echo ^<p^>Время генерации: %date% %time%^</p^> >> output\index.html
+echo ^</div^> >> output\index.html
+echo ^<div class="repo-info"^> >> output\index.html
+echo ^<p^>^<strong^>Jenkins Pipeline:^</strong^> %REPO_INFO%^</p^> >> output\index.html
 echo ^</div^> >> output\index.html
 echo ^</div^> >> output\index.html
 echo ^</body^> >> output\index.html
